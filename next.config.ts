@@ -11,6 +11,16 @@ const withPWA = require("next-pwa")({
   },
 });
 
-const nextConfig: NextConfig = {};
+const nextConfig: NextConfig = {
+  async rewrites() {
+    const dest = process.env.API_INTERNAL_URL ?? "http://localhost:4000";
+    return [
+      {
+        source: "/api/:path*",
+        destination: `${dest}/api/:path*`,
+      },
+    ];
+  },
+};
 
 export default withPWA(nextConfig);
