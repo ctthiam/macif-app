@@ -111,8 +111,8 @@ export default function ClientDetailPage() {
       await api.post(`/api/credits/${showPaySheet.id}/pay`, { amount });
       setShowPaySheet(null);
       load();
-    } catch {
-      //
+    } catch (e: any) {
+      alert(e?.response?.data?.message ?? "Erreur lors du paiement");
     } finally {
       setPaying(false);
     }
@@ -488,99 +488,104 @@ export default function ClientDetailPage() {
             className="rounded-t-3xl"
             style={{
               background: "var(--color-surface)",
-              padding: "1.25rem 1rem calc(2rem + env(safe-area-inset-bottom))",
+              maxHeight: "90vh",
+              display: "flex",
+              flexDirection: "column",
             }}
           >
-            <div
-              className="mx-auto mb-4 rounded-full"
-              style={{ width: 40, height: 4, background: "var(--color-border)" }}
-            />
+            <div style={{ overflowY: "auto", flex: 1, padding: "1.25rem 1rem 0.5rem" }}>
+              <div
+                className="mx-auto mb-4 rounded-full"
+                style={{ width: 40, height: 4, background: "var(--color-border)" }}
+              />
 
-            <div className="flex items-center justify-between mb-5">
-              <h2
-                style={{ fontSize: "var(--text-lg)", fontWeight: 700, color: "var(--color-text)" }}
-              >
-                Paiement crédit
-              </h2>
-              <button
-                onClick={() => setShowPaySheet(null)}
-                className="flex items-center justify-center rounded-xl tap-feedback"
-                style={{ width: 36, height: 36, background: "var(--color-surface-2)" }}
-              >
-                <X size={18} color="var(--color-text-muted)" />
-              </button>
-            </div>
-
-            <div
-              className="rounded-2xl px-4 py-3 mb-4 text-center"
-              style={{ background: "rgba(183,28,28,0.06)", border: "1px solid rgba(183,28,28,0.15)" }}
-            >
-              <p style={{ fontSize: "var(--text-xs)", color: "var(--color-danger)", fontWeight: 500 }}>
-                Restant dû
-              </p>
-              <p
-                className="amount"
-                style={{ fontSize: "var(--text-2xl)", fontWeight: 700, color: "var(--color-danger)" }}
-              >
-                {formatFCFA(Number(showPaySheet.amountRemaining))}
-              </p>
-            </div>
-
-            <div className="space-y-4">
-              <div>
-                <label
-                  style={{
-                    fontSize: "var(--text-xs)",
-                    fontWeight: 700,
-                    color: "var(--color-text-muted)",
-                    textTransform: "uppercase",
-                    letterSpacing: "0.05em",
-                  }}
+              <div className="flex items-center justify-between mb-5">
+                <h2
+                  style={{ fontSize: "var(--text-lg)", fontWeight: 700, color: "var(--color-text)" }}
                 >
-                  Montant payé (FCFA)
-                </label>
-                <input
-                  type="number"
-                  inputMode="numeric"
-                  value={payAmount}
-                  onChange={(e) => setPayAmount(e.target.value)}
-                  className="input mt-1.5 amount"
-                  style={{ fontSize: "var(--text-xl)", fontWeight: 700, textAlign: "center" }}
-                />
+                  Paiement crédit
+                </h2>
+                <button
+                  onClick={() => setShowPaySheet(null)}
+                  className="flex items-center justify-center rounded-xl tap-feedback"
+                  style={{ width: 36, height: 36, background: "var(--color-surface-2)" }}
+                >
+                  <X size={18} color="var(--color-text-muted)" />
+                </button>
               </div>
 
-              {/* Suggestions */}
-              <div className="grid grid-cols-3 gap-2">
-                {[
-                  showPaySheet.amountRemaining,
-                  Math.round(Number(showPaySheet.amountRemaining) / 2),
-                  Math.round(Number(showPaySheet.amountRemaining) / 4),
-                ]
-                  .filter((v) => v > 0)
-                  .map((v) => (
-                    <button
-                      key={v}
-                      onClick={() => setPayAmount(String(Math.round(v)))}
-                      className="rounded-xl tap-feedback"
-                      style={{
-                        height: 40,
-                        background:
-                          Number(payAmount) === Math.round(v)
-                            ? "var(--color-primary)"
-                            : "var(--color-surface-2)",
-                        color:
-                          Number(payAmount) === Math.round(v)
-                            ? "white"
-                            : "var(--color-text-muted)",
-                        fontWeight: 700,
-                        fontSize: "var(--text-xs)",
-                      }}
-                    >
-                      {formatFCFA(Math.round(v))}
-                    </button>
-                  ))}
+              <div
+                className="rounded-2xl px-4 py-3 mb-4 text-center"
+                style={{ background: "rgba(183,28,28,0.06)", border: "1px solid rgba(183,28,28,0.15)" }}
+              >
+                <p style={{ fontSize: "var(--text-xs)", color: "var(--color-danger)", fontWeight: 500 }}>
+                  Restant dû
+                </p>
+                <p
+                  className="amount"
+                  style={{ fontSize: "var(--text-2xl)", fontWeight: 700, color: "var(--color-danger)" }}
+                >
+                  {formatFCFA(Number(showPaySheet.amountRemaining))}
+                </p>
               </div>
 
+              <div className="space-y-4">
+                <div>
+                  <label
+                    style={{
+                      fontSize: "var(--text-xs)",
+                      fontWeight: 700,
+                      color: "var(--color-text-muted)",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.05em",
+                    }}
+                  >
+                    Montant payé (FCFA)
+                  </label>
+                  <input
+                    type="number"
+                    inputMode="numeric"
+                    value={payAmount}
+                    onChange={(e) => setPayAmount(e.target.value)}
+                    className="input mt-1.5 amount"
+                    style={{ fontSize: "var(--text-xl)", fontWeight: 700, textAlign: "center" }}
+                  />
+                </div>
+
+                {/* Suggestions */}
+                <div className="grid grid-cols-3 gap-2">
+                  {[
+                    showPaySheet.amountRemaining,
+                    Math.round(Number(showPaySheet.amountRemaining) / 2),
+                    Math.round(Number(showPaySheet.amountRemaining) / 4),
+                  ]
+                    .filter((v) => v > 0)
+                    .map((v) => (
+                      <button
+                        key={v}
+                        onClick={() => setPayAmount(String(Math.round(v)))}
+                        className="rounded-xl tap-feedback"
+                        style={{
+                          height: 40,
+                          background:
+                            Number(payAmount) === Math.round(v)
+                              ? "var(--color-primary)"
+                              : "var(--color-surface-2)",
+                          color:
+                            Number(payAmount) === Math.round(v)
+                              ? "white"
+                              : "var(--color-text-muted)",
+                          fontWeight: 700,
+                          fontSize: "var(--text-xs)",
+                        }}
+                      >
+                        {formatFCFA(Math.round(v))}
+                      </button>
+                    ))}
+                </div>
+              </div>
+            </div>
+            <div style={{ padding: "0.75rem 1rem calc(1rem + env(safe-area-inset-bottom))", flexShrink: 0 }}>
               <button
                 onClick={handlePay}
                 disabled={paying || !Number(payAmount)}

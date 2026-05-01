@@ -59,8 +59,8 @@ export default function ShopSettingsPage() {
       updateShop({ name: form.name });
       setSaved(true);
       setTimeout(() => setSaved(false), 2000);
-    } catch {
-      //
+    } catch (e: any) {
+      alert(e?.response?.data?.message ?? "Erreur lors de la sauvegarde");
     } finally {
       setSaving(false);
     }

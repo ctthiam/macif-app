@@ -140,8 +140,8 @@ function NewPurchaseContent() {
       });
       setSuccess(true);
       navigator.vibrate?.(100);
-    } catch {
-      //
+    } catch (e: any) {
+      alert(e?.response?.data?.message ?? "Erreur lors de l'enregistrement");
     } finally {
       setSubmitting(false);
     }

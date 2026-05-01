@@ -100,8 +100,8 @@ export default function ExpensesPage() {
       setShowSheet(false);
       setForm({ category: "other", amount: "", description: "", date: todayStr });
       load();
-    } catch {
-      //
+    } catch (e: any) {
+      alert(e?.response?.data?.message ?? "Erreur lors de l'enregistrement");
     } finally {
       setSaving(false);
     }
@@ -278,88 +278,91 @@ export default function ExpensesPage() {
         >
           <div
             className="rounded-t-3xl"
-            style={{ background: "var(--color-surface)", padding: "1.25rem 1rem calc(2rem + env(safe-area-inset-bottom))", maxHeight: "90vh", overflowY: "auto" }}
+            style={{ background: "var(--color-surface)", maxHeight: "90vh", display: "flex", flexDirection: "column" }}
           >
-            <div className="mx-auto mb-4 rounded-full" style={{ width: 40, height: 4, background: "var(--color-border)" }} />
-            <div className="flex items-center justify-between mb-5">
-              <h2 style={{ fontSize: "var(--text-lg)", fontWeight: 700, color: "var(--color-text)" }}>
-                Nouvelle dépense
-              </h2>
-              <button onClick={() => setShowSheet(false)} className="flex items-center justify-center rounded-xl tap-feedback" style={{ width: 36, height: 36, background: "var(--color-surface-2)" }}>
-                <X size={18} color="var(--color-text-muted)" />
-              </button>
-            </div>
+            <div style={{ overflowY: "auto", flex: 1, padding: "1.25rem 1rem 0.5rem" }}>
+              <div className="mx-auto mb-4 rounded-full" style={{ width: 40, height: 4, background: "var(--color-border)" }} />
+              <div className="flex items-center justify-between mb-5">
+                <h2 style={{ fontSize: "var(--text-lg)", fontWeight: 700, color: "var(--color-text)" }}>
+                  Nouvelle dépense
+                </h2>
+                <button onClick={() => setShowSheet(false)} className="flex items-center justify-center rounded-xl tap-feedback" style={{ width: 36, height: 36, background: "var(--color-surface-2)" }}>
+                  <X size={18} color="var(--color-text-muted)" />
+                </button>
+              </div>
 
-            <div className="space-y-4">
-              {/* Catégorie */}
-              <div>
-                <label style={{ fontSize: "var(--text-xs)", fontWeight: 700, color: "var(--color-text-muted)", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-                  Catégorie
-                </label>
-                <div className="grid grid-cols-4 gap-2 mt-2">
-                  {Object.entries(CATEGORIES).map(([key, cat]) => (
-                    <button
-                      key={key}
-                      onClick={() => setForm((f) => ({ ...f, category: key }))}
-                      className="flex flex-col items-center justify-center rounded-xl tap-feedback py-2"
-                      style={{
-                        background: form.category === key ? `${cat.color}18` : "var(--color-surface-2)",
-                        border: `1.5px solid ${form.category === key ? cat.color : "transparent"}`,
-                      }}
-                    >
-                      <span style={{ fontSize: "1.2rem" }}>{cat.icon}</span>
-                      <span style={{ fontSize: 10, fontWeight: 600, color: form.category === key ? cat.color : "var(--color-text-muted)", marginTop: 2 }}>
-                        {cat.label}
-                      </span>
-                    </button>
-                  ))}
+              <div className="space-y-4">
+                {/* Catégorie */}
+                <div>
+                  <label style={{ fontSize: "var(--text-xs)", fontWeight: 700, color: "var(--color-text-muted)", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                    Catégorie
+                  </label>
+                  <div className="grid grid-cols-4 gap-2 mt-2">
+                    {Object.entries(CATEGORIES).map(([key, cat]) => (
+                      <button
+                        key={key}
+                        onClick={() => setForm((f) => ({ ...f, category: key }))}
+                        className="flex flex-col items-center justify-center rounded-xl tap-feedback py-2"
+                        style={{
+                          background: form.category === key ? `${cat.color}18` : "var(--color-surface-2)",
+                          border: `1.5px solid ${form.category === key ? cat.color : "transparent"}`,
+                        }}
+                      >
+                        <span style={{ fontSize: "1.2rem" }}>{cat.icon}</span>
+                        <span style={{ fontSize: 10, fontWeight: 600, color: form.category === key ? cat.color : "var(--color-text-muted)", marginTop: 2 }}>
+                          {cat.label}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Montant */}
+                <div>
+                  <label style={{ fontSize: "var(--text-xs)", fontWeight: 700, color: "var(--color-text-muted)", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                    Montant (FCFA) *
+                  </label>
+                  <input
+                    type="number"
+                    inputMode="numeric"
+                    placeholder="0"
+                    value={form.amount}
+                    onChange={(e) => setForm((f) => ({ ...f, amount: e.target.value }))}
+                    className="input mt-1.5 amount"
+                    style={{ fontSize: "var(--text-xl)", fontWeight: 700, textAlign: "center" }}
+                    autoFocus
+                  />
+                </div>
+
+                {/* Description */}
+                <div>
+                  <label style={{ fontSize: "var(--text-xs)", fontWeight: 700, color: "var(--color-text-muted)", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                    Description (optionnel)
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Ex: Facture SENELEC mars"
+                    value={form.description}
+                    onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
+                    className="input mt-1.5"
+                  />
+                </div>
+
+                {/* Date */}
+                <div>
+                  <label style={{ fontSize: "var(--text-xs)", fontWeight: 700, color: "var(--color-text-muted)", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                    Date
+                  </label>
+                  <input
+                    type="date"
+                    value={form.date}
+                    onChange={(e) => setForm((f) => ({ ...f, date: e.target.value }))}
+                    className="input mt-1.5"
+                  />
                 </div>
               </div>
-
-              {/* Montant */}
-              <div>
-                <label style={{ fontSize: "var(--text-xs)", fontWeight: 700, color: "var(--color-text-muted)", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-                  Montant (FCFA) *
-                </label>
-                <input
-                  type="number"
-                  inputMode="numeric"
-                  placeholder="0"
-                  value={form.amount}
-                  onChange={(e) => setForm((f) => ({ ...f, amount: e.target.value }))}
-                  className="input mt-1.5 amount"
-                  style={{ fontSize: "var(--text-xl)", fontWeight: 700, textAlign: "center" }}
-                  autoFocus
-                />
-              </div>
-
-              {/* Description */}
-              <div>
-                <label style={{ fontSize: "var(--text-xs)", fontWeight: 700, color: "var(--color-text-muted)", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-                  Description (optionnel)
-                </label>
-                <input
-                  type="text"
-                  placeholder="Ex: Facture SENELEC mars"
-                  value={form.description}
-                  onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
-                  className="input mt-1.5"
-                />
-              </div>
-
-              {/* Date */}
-              <div>
-                <label style={{ fontSize: "var(--text-xs)", fontWeight: 700, color: "var(--color-text-muted)", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-                  Date
-                </label>
-                <input
-                  type="date"
-                  value={form.date}
-                  onChange={(e) => setForm((f) => ({ ...f, date: e.target.value }))}
-                  className="input mt-1.5"
-                />
-              </div>
-
+            </div>
+            <div style={{ padding: "0.75rem 1rem calc(1rem + env(safe-area-inset-bottom))", flexShrink: 0 }}>
               <button
                 onClick={handleCreate}
                 disabled={saving || !form.amount}

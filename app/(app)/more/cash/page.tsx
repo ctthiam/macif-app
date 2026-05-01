@@ -70,8 +70,8 @@ export default function CashPage() {
       setOpenAmount("");
       setNotes("");
       load();
-    } catch {
-      //
+    } catch (e: any) {
+      alert(e?.response?.data?.message ?? "Erreur lors de l'ouverture");
     } finally {
       setSaving(false);
     }
@@ -89,8 +89,8 @@ export default function CashPage() {
       setCloseAmount("");
       setNotes("");
       load();
-    } catch {
-      //
+    } catch (e: any) {
+      alert(e?.response?.data?.message ?? "Erreur lors de la fermeture");
     } finally {
       setSaving(false);
     }
@@ -424,75 +424,79 @@ export default function CashPage() {
         >
           <div
             className="rounded-t-3xl"
-            style={{ background: "var(--color-surface)", padding: "1.25rem 1rem calc(2rem + env(safe-area-inset-bottom))" }}
+            style={{ background: "var(--color-surface)", maxHeight: "90vh", display: "flex", flexDirection: "column" }}
           >
-            <div className="mx-auto mb-4 rounded-full" style={{ width: 40, height: 4, background: "var(--color-border)" }} />
-            <div className="flex items-center justify-between mb-5">
-              <h2 style={{ fontSize: "var(--text-lg)", fontWeight: 700, color: "var(--color-text)" }}>
-                Ouvrir la caisse
-              </h2>
-              <button
-                onClick={() => setShowOpenSheet(false)}
-                className="flex items-center justify-center rounded-xl tap-feedback"
-                style={{ width: 36, height: 36, background: "var(--color-surface-2)" }}
-              >
-                <X size={18} color="var(--color-text-muted)" />
-              </button>
+            <div style={{ overflowY: "auto", flex: 1, padding: "1.25rem 1rem 0.5rem" }}>
+              <div className="mx-auto mb-4 rounded-full" style={{ width: 40, height: 4, background: "var(--color-border)" }} />
+              <div className="flex items-center justify-between mb-5">
+                <h2 style={{ fontSize: "var(--text-lg)", fontWeight: 700, color: "var(--color-text)" }}>
+                  Ouvrir la caisse
+                </h2>
+                <button
+                  onClick={() => setShowOpenSheet(false)}
+                  className="flex items-center justify-center rounded-xl tap-feedback"
+                  style={{ width: 36, height: 36, background: "var(--color-surface-2)" }}
+                >
+                  <X size={18} color="var(--color-text-muted)" />
+                </button>
+              </div>
+              <div className="space-y-4">
+                <div>
+                  <label style={{ fontSize: "var(--text-xs)", fontWeight: 700, color: "var(--color-text-muted)", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                    Fonds de caisse (FCFA)
+                  </label>
+                  <input
+                    type="number"
+                    inputMode="numeric"
+                    placeholder="0"
+                    value={openAmount}
+                    onChange={(e) => setOpenAmount(e.target.value)}
+                    className="input mt-1.5 amount"
+                    style={{ fontSize: "var(--text-xl)", fontWeight: 700, textAlign: "center" }}
+                    autoFocus
+                  />
+                </div>
+                {/* Suggestions rapides */}
+                <div className="grid grid-cols-4 gap-2">
+                  {[0, 5000, 10000, 20000].map((v) => (
+                    <button
+                      key={v}
+                      onClick={() => setOpenAmount(String(v))}
+                      className="rounded-xl tap-feedback"
+                      style={{
+                        height: 40,
+                        background: Number(openAmount) === v ? "var(--color-primary)" : "var(--color-surface-2)",
+                        color: Number(openAmount) === v ? "white" : "var(--color-text-muted)",
+                        fontWeight: 700,
+                        fontSize: "var(--text-xs)",
+                      }}
+                    >
+                      {v === 0 ? "0" : `${v / 1000}k`}
+                    </button>
+                  ))}
+                </div>
+                <div>
+                  <label style={{ fontSize: "var(--text-xs)", fontWeight: 700, color: "var(--color-text-muted)", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                    Notes (optionnel)
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Remarque…"
+                    value={notes}
+                    onChange={(e) => setNotes(e.target.value)}
+                    className="input mt-1.5"
+                  />
+                </div>
+              </div>
             </div>
-            <div className="space-y-4">
-              <div>
-                <label style={{ fontSize: "var(--text-xs)", fontWeight: 700, color: "var(--color-text-muted)", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-                  Fonds de caisse (FCFA)
-                </label>
-                <input
-                  type="number"
-                  inputMode="numeric"
-                  placeholder="0"
-                  value={openAmount}
-                  onChange={(e) => setOpenAmount(e.target.value)}
-                  className="input mt-1.5 amount"
-                  style={{ fontSize: "var(--text-xl)", fontWeight: 700, textAlign: "center" }}
-                  autoFocus
-                />
-              </div>
-              {/* Suggestions rapides */}
-              <div className="grid grid-cols-4 gap-2">
-                {[0, 5000, 10000, 20000].map((v) => (
-                  <button
-                    key={v}
-                    onClick={() => setOpenAmount(String(v))}
-                    className="rounded-xl tap-feedback"
-                    style={{
-                      height: 40,
-                      background: Number(openAmount) === v ? "var(--color-primary)" : "var(--color-surface-2)",
-                      color: Number(openAmount) === v ? "white" : "var(--color-text-muted)",
-                      fontWeight: 700,
-                      fontSize: "var(--text-xs)",
-                    }}
-                  >
-                    {v === 0 ? "0" : `${v / 1000}k`}
-                  </button>
-                ))}
-              </div>
-              <div>
-                <label style={{ fontSize: "var(--text-xs)", fontWeight: 700, color: "var(--color-text-muted)", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-                  Notes (optionnel)
-                </label>
-                <input
-                  type="text"
-                  placeholder="Remarque…"
-                  value={notes}
-                  onChange={(e) => setNotes(e.target.value)}
-                  className="input mt-1.5"
-                />
-              </div>
+            <div style={{ padding: "0.75rem 1rem calc(1rem + env(safe-area-inset-bottom))", flexShrink: 0 }}>
               <button
                 onClick={handleOpen}
-                disabled={saving}
+                disabled={saving || !openAmount}
                 className="w-full rounded-2xl tap-feedback"
                 style={{
                   height: 52,
-                  background: "var(--color-primary)",
+                  background: openAmount ? "var(--color-primary)" : "var(--color-border)",
                   color: "white",
                   fontWeight: 700,
                   fontSize: "var(--text-base)",
@@ -514,83 +518,87 @@ export default function CashPage() {
         >
           <div
             className="rounded-t-3xl"
-            style={{ background: "var(--color-surface)", padding: "1.25rem 1rem calc(2rem + env(safe-area-inset-bottom))" }}
+            style={{ background: "var(--color-surface)", maxHeight: "90vh", display: "flex", flexDirection: "column" }}
           >
-            <div className="mx-auto mb-4 rounded-full" style={{ width: 40, height: 4, background: "var(--color-border)" }} />
-            <div className="flex items-center justify-between mb-2">
-              <h2 style={{ fontSize: "var(--text-lg)", fontWeight: 700, color: "var(--color-text)" }}>
-                Fermer la caisse
-              </h2>
-              <button
-                onClick={() => setShowCloseSheet(false)}
-                className="flex items-center justify-center rounded-xl tap-feedback"
-                style={{ width: 36, height: 36, background: "var(--color-surface-2)" }}
-              >
-                <X size={18} color="var(--color-text-muted)" />
-              </button>
-            </div>
-            {register && (
-              <p style={{ fontSize: "var(--text-sm)", color: "var(--color-text-muted)", marginBottom: "1rem" }}>
-                Théorique: <strong style={{ color: "var(--color-text)" }}>{formatFCFA(register.theoretical)}</strong>
-              </p>
-            )}
-            <div className="space-y-4">
-              <div>
-                <label style={{ fontSize: "var(--text-xs)", fontWeight: 700, color: "var(--color-text-muted)", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-                  Montant compté (FCFA)
-                </label>
-                <input
-                  type="number"
-                  inputMode="numeric"
-                  placeholder="0"
-                  value={closeAmount}
-                  onChange={(e) => setCloseAmount(e.target.value)}
-                  className="input mt-1.5 amount"
-                  style={{ fontSize: "var(--text-xl)", fontWeight: 700, textAlign: "center" }}
-                  autoFocus
-                />
-              </div>
-              {closeAmount && register && (
-                <div
-                  className="rounded-xl px-4 py-3 text-center"
-                  style={{
-                    background:
-                      Number(closeAmount) === Math.round(register.theoretical)
-                        ? "rgba(27,94,32,0.08)"
-                        : "rgba(183,28,28,0.06)",
-                  }}
+            <div style={{ overflowY: "auto", flex: 1, padding: "1.25rem 1rem 0.5rem" }}>
+              <div className="mx-auto mb-4 rounded-full" style={{ width: 40, height: 4, background: "var(--color-border)" }} />
+              <div className="flex items-center justify-between mb-2">
+                <h2 style={{ fontSize: "var(--text-lg)", fontWeight: 700, color: "var(--color-text)" }}>
+                  Fermer la caisse
+                </h2>
+                <button
+                  onClick={() => setShowCloseSheet(false)}
+                  className="flex items-center justify-center rounded-xl tap-feedback"
+                  style={{ width: 36, height: 36, background: "var(--color-surface-2)" }}
                 >
-                  <p
-                    className="amount"
+                  <X size={18} color="var(--color-text-muted)" />
+                </button>
+              </div>
+              {register && (
+                <p style={{ fontSize: "var(--text-sm)", color: "var(--color-text-muted)", marginBottom: "1rem" }}>
+                  Théorique: <strong style={{ color: "var(--color-text)" }}>{formatFCFA(register.theoretical)}</strong>
+                </p>
+              )}
+              <div className="space-y-4">
+                <div>
+                  <label style={{ fontSize: "var(--text-xs)", fontWeight: 700, color: "var(--color-text-muted)", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                    Montant compté (FCFA)
+                  </label>
+                  <input
+                    type="number"
+                    inputMode="numeric"
+                    placeholder="0"
+                    value={closeAmount}
+                    onChange={(e) => setCloseAmount(e.target.value)}
+                    className="input mt-1.5 amount"
+                    style={{ fontSize: "var(--text-xl)", fontWeight: 700, textAlign: "center" }}
+                    autoFocus
+                  />
+                </div>
+                {closeAmount && register && (
+                  <div
+                    className="rounded-xl px-4 py-3 text-center"
                     style={{
-                      fontSize: "var(--text-base)",
-                      fontWeight: 700,
-                      color:
-                        Number(closeAmount) - register.theoretical === 0
-                          ? "var(--color-primary)"
-                          : "var(--color-danger)",
+                      background:
+                        Number(closeAmount) === Math.round(register.theoretical)
+                          ? "rgba(27,94,32,0.08)"
+                          : "rgba(183,28,28,0.06)",
                     }}
                   >
-                    {Number(closeAmount) - register.theoretical === 0
-                      ? "Caisse équilibrée ✓"
-                      : Number(closeAmount) - register.theoretical > 0
-                      ? `Excédent +${formatFCFA(Number(closeAmount) - register.theoretical)}`
-                      : `Manque ${formatFCFA(register.theoretical - Number(closeAmount))}`}
-                  </p>
+                    <p
+                      className="amount"
+                      style={{
+                        fontSize: "var(--text-base)",
+                        fontWeight: 700,
+                        color:
+                          Number(closeAmount) - register.theoretical === 0
+                            ? "var(--color-primary)"
+                            : "var(--color-danger)",
+                      }}
+                    >
+                      {Number(closeAmount) - register.theoretical === 0
+                        ? "Caisse équilibrée ✓"
+                        : Number(closeAmount) - register.theoretical > 0
+                        ? `Excédent +${formatFCFA(Number(closeAmount) - register.theoretical)}`
+                        : `Manque ${formatFCFA(register.theoretical - Number(closeAmount))}`}
+                    </p>
+                  </div>
+                )}
+                <div>
+                  <label style={{ fontSize: "var(--text-xs)", fontWeight: 700, color: "var(--color-text-muted)", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                    Notes (optionnel)
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Remarque…"
+                    value={notes}
+                    onChange={(e) => setNotes(e.target.value)}
+                    className="input mt-1.5"
+                  />
                 </div>
-              )}
-              <div>
-                <label style={{ fontSize: "var(--text-xs)", fontWeight: 700, color: "var(--color-text-muted)", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-                  Notes (optionnel)
-                </label>
-                <input
-                  type="text"
-                  placeholder="Remarque…"
-                  value={notes}
-                  onChange={(e) => setNotes(e.target.value)}
-                  className="input mt-1.5"
-                />
               </div>
+            </div>
+            <div style={{ padding: "0.75rem 1rem calc(1rem + env(safe-area-inset-bottom))", flexShrink: 0 }}>
               <button
                 onClick={handleClose}
                 disabled={saving || !closeAmount}

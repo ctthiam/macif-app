@@ -55,8 +55,8 @@ export default function SuppliersPage() {
       setShowSheet(false);
       setForm({ name: "", phone: "", address: "" });
       load(search);
-    } catch {
-      //
+    } catch (e: any) {
+      alert(e?.response?.data?.message ?? "Erreur lors de la création");
     } finally {
       setSaving(false);
     }
@@ -208,36 +208,40 @@ export default function SuppliersPage() {
           style={{ background: "rgba(0,0,0,0.5)" }}
           onClick={(e) => e.target === e.currentTarget && setShowSheet(false)}
         >
-          <div className="rounded-t-3xl" style={{ background: "var(--color-surface)", padding: "1.25rem 1rem calc(2rem + env(safe-area-inset-bottom))" }}>
-            <div className="mx-auto mb-4 rounded-full" style={{ width: 40, height: 4, background: "var(--color-border)" }} />
-            <div className="flex items-center justify-between mb-5">
-              <h2 style={{ fontSize: "var(--text-lg)", fontWeight: 700, color: "var(--color-text)" }}>
-                Nouveau fournisseur
-              </h2>
-              <button onClick={() => setShowSheet(false)} className="flex items-center justify-center rounded-xl tap-feedback" style={{ width: 36, height: 36, background: "var(--color-surface-2)" }}>
-                <X size={18} color="var(--color-text-muted)" />
-              </button>
+          <div className="rounded-t-3xl" style={{ background: "var(--color-surface)", maxHeight: "90vh", display: "flex", flexDirection: "column" }}>
+            <div style={{ overflowY: "auto", flex: 1, padding: "1.25rem 1rem 0.5rem" }}>
+              <div className="mx-auto mb-4 rounded-full" style={{ width: 40, height: 4, background: "var(--color-border)" }} />
+              <div className="flex items-center justify-between mb-5">
+                <h2 style={{ fontSize: "var(--text-lg)", fontWeight: 700, color: "var(--color-text)" }}>
+                  Nouveau fournisseur
+                </h2>
+                <button onClick={() => setShowSheet(false)} className="flex items-center justify-center rounded-xl tap-feedback" style={{ width: 36, height: 36, background: "var(--color-surface-2)" }}>
+                  <X size={18} color="var(--color-text-muted)" />
+                </button>
+              </div>
+              <div className="space-y-4">
+                {[
+                  { key: "name", label: "Nom *", placeholder: "Diallo Matériaux", type: "text" },
+                  { key: "phone", label: "Téléphone", placeholder: "77 000 00 00", type: "tel" },
+                  { key: "address", label: "Adresse (optionnel)", placeholder: "Quartier, Ville", type: "text" },
+                ].map(({ key, label, placeholder, type }) => (
+                  <div key={key}>
+                    <label style={{ fontSize: "var(--text-xs)", fontWeight: 700, color: "var(--color-text-muted)", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                      {label}
+                    </label>
+                    <input
+                      type={type}
+                      placeholder={placeholder}
+                      value={form[key as keyof NewForm]}
+                      onChange={(e) => setForm((f) => ({ ...f, [key]: e.target.value }))}
+                      className="input mt-1.5"
+                      autoFocus={key === "name"}
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
-            <div className="space-y-4">
-              {[
-                { key: "name", label: "Nom *", placeholder: "Diallo Matériaux", type: "text" },
-                { key: "phone", label: "Téléphone", placeholder: "77 000 00 00", type: "tel" },
-                { key: "address", label: "Adresse (optionnel)", placeholder: "Quartier, Ville", type: "text" },
-              ].map(({ key, label, placeholder, type }) => (
-                <div key={key}>
-                  <label style={{ fontSize: "var(--text-xs)", fontWeight: 700, color: "var(--color-text-muted)", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-                    {label}
-                  </label>
-                  <input
-                    type={type}
-                    placeholder={placeholder}
-                    value={form[key as keyof NewForm]}
-                    onChange={(e) => setForm((f) => ({ ...f, [key]: e.target.value }))}
-                    className="input mt-1.5"
-                    autoFocus={key === "name"}
-                  />
-                </div>
-              ))}
+            <div style={{ padding: "0.75rem 1rem calc(1rem + env(safe-area-inset-bottom))", flexShrink: 0 }}>
               <button
                 onClick={handleCreate}
                 disabled={saving || !form.name.trim()}

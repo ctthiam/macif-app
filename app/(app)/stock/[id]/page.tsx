@@ -109,8 +109,8 @@ export default function ProductDetailPage() {
       });
       setShowEdit(false);
       load();
-    } catch {
-      //
+    } catch (e: any) {
+      alert(e?.response?.data?.message ?? "Erreur lors de la modification");
     } finally {
       setSaving(false);
     }
@@ -129,8 +129,8 @@ export default function ProductDetailPage() {
       setAdjustQty("");
       setAdjustNote("");
       load();
-    } catch {
-      //
+    } catch (e: any) {
+      alert(e?.response?.data?.message ?? "Erreur lors de l'ajustement");
     } finally {
       setSaving(false);
     }
@@ -366,78 +366,81 @@ export default function ProductDetailPage() {
           style={{ background: "rgba(0,0,0,0.5)" }}
           onClick={(e) => e.target === e.currentTarget && setShowAdjust(false)}
         >
-          <div className="rounded-t-3xl" style={{ background: "var(--color-surface)", padding: "1.25rem 1rem calc(2rem + env(safe-area-inset-bottom))" }}>
-            <div className="mx-auto mb-4 rounded-full" style={{ width: 40, height: 4, background: "var(--color-border)" }} />
-            <div className="flex items-center justify-between mb-2">
-              <h2 style={{ fontSize: "var(--text-lg)", fontWeight: 700, color: "var(--color-text)" }}>
-                Ajuster le stock
-              </h2>
-              <button onClick={() => setShowAdjust(false)} className="flex items-center justify-center rounded-xl tap-feedback" style={{ width: 36, height: 36, background: "var(--color-surface-2)" }}>
-                <X size={18} color="var(--color-text-muted)" />
-              </button>
-            </div>
-            <p style={{ fontSize: "var(--text-sm)", color: "var(--color-text-muted)", marginBottom: "1.25rem" }}>
-              Stock actuel: <strong style={{ color: "var(--color-text)" }}>{Number(product.stockQty)} {product.unit}</strong>
-            </p>
+          <div className="rounded-t-3xl" style={{ background: "var(--color-surface)", maxHeight: "90vh", display: "flex", flexDirection: "column" }}>
+            <div style={{ overflowY: "auto", flex: 1, padding: "1.25rem 1rem 0.5rem" }}>
+              <div className="mx-auto mb-4 rounded-full" style={{ width: 40, height: 4, background: "var(--color-border)" }} />
+              <div className="flex items-center justify-between mb-2">
+                <h2 style={{ fontSize: "var(--text-lg)", fontWeight: 700, color: "var(--color-text)" }}>
+                  Ajuster le stock
+                </h2>
+                <button onClick={() => setShowAdjust(false)} className="flex items-center justify-center rounded-xl tap-feedback" style={{ width: 36, height: 36, background: "var(--color-surface-2)" }}>
+                  <X size={18} color="var(--color-text-muted)" />
+                </button>
+              </div>
+              <p style={{ fontSize: "var(--text-sm)", color: "var(--color-text-muted)", marginBottom: "1.25rem" }}>
+                Stock actuel: <strong style={{ color: "var(--color-text)" }}>{Number(product.stockQty)} {product.unit}</strong>
+              </p>
 
-            <div className="space-y-4">
-              {/* Contrôle ± */}
-              <div>
-                <label style={{ fontSize: "var(--text-xs)", fontWeight: 700, color: "var(--color-text-muted)", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-                  Quantité (+ pour ajouter, - pour retirer)
-                </label>
-                <div className="flex items-center gap-3 mt-2">
-                  <button
-                    onClick={() => setAdjustQty((v) => String(Number(v || "0") - 1))}
-                    className="flex items-center justify-center rounded-xl tap-feedback shrink-0"
-                    style={{ width: 48, height: 48, background: "rgba(183,28,28,0.08)", border: "none" }}
-                  >
-                    <Minus size={20} color="var(--color-danger)" strokeWidth={2.5} />
-                  </button>
-                  <input
-                    type="number"
-                    value={adjustQty}
-                    onChange={(e) => setAdjustQty(e.target.value)}
-                    className="input amount flex-1"
-                    style={{ fontSize: "var(--text-xl)", fontWeight: 700, textAlign: "center" }}
-                    placeholder="0"
-                    autoFocus
-                  />
-                  <button
-                    onClick={() => setAdjustQty((v) => String(Number(v || "0") + 1))}
-                    className="flex items-center justify-center rounded-xl tap-feedback shrink-0"
-                    style={{ width: 48, height: 48, background: "rgba(27,94,32,0.08)", border: "none" }}
-                  >
-                    <Plus size={20} color="var(--color-primary)" strokeWidth={2.5} />
-                  </button>
+              <div className="space-y-4">
+                {/* Contrôle ± */}
+                <div>
+                  <label style={{ fontSize: "var(--text-xs)", fontWeight: 700, color: "var(--color-text-muted)", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                    Quantité (+ pour ajouter, - pour retirer)
+                  </label>
+                  <div className="flex items-center gap-3 mt-2">
+                    <button
+                      onClick={() => setAdjustQty((v) => String(Number(v || "0") - 1))}
+                      className="flex items-center justify-center rounded-xl tap-feedback shrink-0"
+                      style={{ width: 48, height: 48, background: "rgba(183,28,28,0.08)", border: "none" }}
+                    >
+                      <Minus size={20} color="var(--color-danger)" strokeWidth={2.5} />
+                    </button>
+                    <input
+                      type="number"
+                      value={adjustQty}
+                      onChange={(e) => setAdjustQty(e.target.value)}
+                      className="input amount flex-1"
+                      style={{ fontSize: "var(--text-xl)", fontWeight: 700, textAlign: "center" }}
+                      placeholder="0"
+                      autoFocus
+                    />
+                    <button
+                      onClick={() => setAdjustQty((v) => String(Number(v || "0") + 1))}
+                      className="flex items-center justify-center rounded-xl tap-feedback shrink-0"
+                      style={{ width: 48, height: 48, background: "rgba(27,94,32,0.08)", border: "none" }}
+                    >
+                      <Plus size={20} color="var(--color-primary)" strokeWidth={2.5} />
+                    </button>
+                  </div>
+                  {adjustQty && Number(adjustQty) !== 0 && (
+                    <p
+                      className="text-center mt-2 amount"
+                      style={{
+                        fontSize: "var(--text-sm)",
+                        fontWeight: 700,
+                        color: Number(adjustQty) > 0 ? "var(--color-primary)" : "var(--color-danger)",
+                      }}
+                    >
+                      Nouveau stock: {Number(product.stockQty) + Number(adjustQty)} {product.unit}
+                    </p>
+                  )}
                 </div>
-                {adjustQty && Number(adjustQty) !== 0 && (
-                  <p
-                    className="text-center mt-2 amount"
-                    style={{
-                      fontSize: "var(--text-sm)",
-                      fontWeight: 700,
-                      color: Number(adjustQty) > 0 ? "var(--color-primary)" : "var(--color-danger)",
-                    }}
-                  >
-                    Nouveau stock: {Number(product.stockQty) + Number(adjustQty)} {product.unit}
-                  </p>
-                )}
-              </div>
 
-              <div>
-                <label style={{ fontSize: "var(--text-xs)", fontWeight: 700, color: "var(--color-text-muted)", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-                  Raison (optionnel)
-                </label>
-                <input
-                  type="text"
-                  placeholder="Ex: Inventaire, perte, retour fournisseur…"
-                  value={adjustNote}
-                  onChange={(e) => setAdjustNote(e.target.value)}
-                  className="input mt-1.5"
-                />
+                <div>
+                  <label style={{ fontSize: "var(--text-xs)", fontWeight: 700, color: "var(--color-text-muted)", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                    Raison (optionnel)
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Ex: Inventaire, perte, retour fournisseur…"
+                    value={adjustNote}
+                    onChange={(e) => setAdjustNote(e.target.value)}
+                    className="input mt-1.5"
+                  />
+                </div>
               </div>
-
+            </div>
+            <div style={{ padding: "0.75rem 1rem calc(1rem + env(safe-area-inset-bottom))", flexShrink: 0 }}>
               <button
                 onClick={handleAdjust}
                 disabled={saving || !adjustQty || Number(adjustQty) === 0}
@@ -466,42 +469,45 @@ export default function ProductDetailPage() {
         >
           <div
             className="rounded-t-3xl"
-            style={{ background: "var(--color-surface)", padding: "1.25rem 1rem calc(2rem + env(safe-area-inset-bottom))", maxHeight: "90vh", overflowY: "auto" }}
+            style={{ background: "var(--color-surface)", maxHeight: "90vh", display: "flex", flexDirection: "column" }}
           >
-            <div className="mx-auto mb-4 rounded-full" style={{ width: 40, height: 4, background: "var(--color-border)" }} />
-            <div className="flex items-center justify-between mb-5">
-              <h2 style={{ fontSize: "var(--text-lg)", fontWeight: 700, color: "var(--color-text)" }}>
-                Modifier le produit
-              </h2>
-              <button onClick={() => setShowEdit(false)} className="flex items-center justify-center rounded-xl tap-feedback" style={{ width: 36, height: 36, background: "var(--color-surface-2)" }}>
-                <X size={18} color="var(--color-text-muted)" />
-              </button>
+            <div style={{ overflowY: "auto", flex: 1, padding: "1.25rem 1rem 0.5rem" }}>
+              <div className="mx-auto mb-4 rounded-full" style={{ width: 40, height: 4, background: "var(--color-border)" }} />
+              <div className="flex items-center justify-between mb-5">
+                <h2 style={{ fontSize: "var(--text-lg)", fontWeight: 700, color: "var(--color-text)" }}>
+                  Modifier le produit
+                </h2>
+                <button onClick={() => setShowEdit(false)} className="flex items-center justify-center rounded-xl tap-feedback" style={{ width: 36, height: 36, background: "var(--color-surface-2)" }}>
+                  <X size={18} color="var(--color-text-muted)" />
+                </button>
+              </div>
+
+              <div className="space-y-4">
+                {[
+                  { key: "name", label: "Nom *", type: "text", placeholder: "Nom du produit" },
+                  { key: "unit", label: "Unité", type: "text", placeholder: "pièce, kg, sac…" },
+                  { key: "sellPrice", label: "Prix de vente *", type: "number", placeholder: "0" },
+                  { key: "sellPriceGros", label: "Prix gros (optionnel)", type: "number", placeholder: "0" },
+                  { key: "buyPrice", label: "Prix d'achat", type: "number", placeholder: "0" },
+                  { key: "stockAlert", label: "Seuil d'alerte", type: "number", placeholder: "5" },
+                ].map(({ key, label, type, placeholder }) => (
+                  <div key={key}>
+                    <label style={{ fontSize: "var(--text-xs)", fontWeight: 700, color: "var(--color-text-muted)", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                      {label}
+                    </label>
+                    <input
+                      type={type}
+                      inputMode={type === "number" ? "numeric" : undefined}
+                      placeholder={placeholder}
+                      value={editForm[key as keyof EditForm]}
+                      onChange={(e) => setEditForm((f) => ({ ...f, [key]: e.target.value }))}
+                      className={`input mt-1.5${type === "number" ? " amount" : ""}`}
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
-
-            <div className="space-y-4">
-              {[
-                { key: "name", label: "Nom *", type: "text", placeholder: "Nom du produit" },
-                { key: "unit", label: "Unité", type: "text", placeholder: "pièce, kg, sac…" },
-                { key: "sellPrice", label: "Prix de vente *", type: "number", placeholder: "0" },
-                { key: "sellPriceGros", label: "Prix gros (optionnel)", type: "number", placeholder: "0" },
-                { key: "buyPrice", label: "Prix d'achat", type: "number", placeholder: "0" },
-                { key: "stockAlert", label: "Seuil d'alerte", type: "number", placeholder: "5" },
-              ].map(({ key, label, type, placeholder }) => (
-                <div key={key}>
-                  <label style={{ fontSize: "var(--text-xs)", fontWeight: 700, color: "var(--color-text-muted)", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-                    {label}
-                  </label>
-                  <input
-                    type={type}
-                    inputMode={type === "number" ? "numeric" : undefined}
-                    placeholder={placeholder}
-                    value={editForm[key as keyof EditForm]}
-                    onChange={(e) => setEditForm((f) => ({ ...f, [key]: e.target.value }))}
-                    className={`input mt-1.5${type === "number" ? " amount" : ""}`}
-                  />
-                </div>
-              ))}
-
+            <div style={{ padding: "0.75rem 1rem calc(1rem + env(safe-area-inset-bottom))", flexShrink: 0 }}>
               <button
                 onClick={handleSaveEdit}
                 disabled={saving || !editForm.name || !editForm.sellPrice}
