@@ -278,6 +278,23 @@ input, textarea, select, button {
   }
 }
 
+/* ── Desktop overrides (lg: 1024px+) ── */
+@media (min-width: 1024px) {
+  .page-content {
+    max-width: 960px;
+    margin: 0;
+    padding: 1.5rem 2rem 2.5rem;
+  }
+
+  .fab {
+    display: none;
+  }
+
+  .bottom-nav {
+    display: none;
+  }
+}
+
 @keyframes shimmer {
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }

@@ -167,139 +167,266 @@ export default function ClientsPage() {
 
         {/* Liste */}
         {loading ? (
-          <div className="space-y-2">
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="skeleton rounded-2xl" style={{ height: 72 }} />
-            ))}
-          </div>
+          <>
+            {/* Mobile skeleton */}
+            <div className="lg:hidden space-y-2">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="skeleton rounded-2xl" style={{ height: 72 }} />
+              ))}
+            </div>
+            {/* Desktop skeleton */}
+            <div className="hidden lg:block">
+              <div className="card p-0 overflow-hidden">
+                <table className="w-full" style={{ borderCollapse: "collapse" }}>
+                  <thead>
+                    <tr style={{ borderBottom: "1.5px solid var(--color-border)", background: "var(--color-surface-2)" }}>
+                      {["Client", "Téléphone", "Crédit en cours", "Total acheté"].map((col) => (
+                        <th key={col} style={{ padding: "0.75rem 1rem", textAlign: "left", fontSize: "var(--text-xs)", fontWeight: 700, color: "var(--color-text-muted)", textTransform: "uppercase", letterSpacing: "0.05em" }}>{col}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[1, 2, 3, 4, 5].map((i) => (
+                      <tr key={i} style={{ borderBottom: "1px solid var(--color-border)" }}>
+                        <td colSpan={4} style={{ padding: "0.75rem 1rem" }}>
+                          <div className="skeleton h-10 rounded" />
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </>
         ) : customers.length === 0 ? (
-          <div className="card text-center py-12">
-            <Users
-              size={40}
-              strokeWidth={1.2}
-              className="mx-auto mb-3 opacity-30"
-              color="var(--color-text-muted)"
-            />
-            <p style={{ fontSize: "var(--text-base)", fontWeight: 600, color: "var(--color-text)" }}>
-              {search ? "Aucun client trouvé" : "Aucun client encore"}
-            </p>
-            <p
-              style={{ fontSize: "var(--text-sm)", color: "var(--color-text-muted)", marginTop: 4 }}
-            >
-              {search ? "Vérifiez l'orthographe" : "Ajoutez votre premier client"}
-            </p>
-            {!search && (
-              <button
-                onClick={() => setShowNewSheet(true)}
-                className="mx-auto mt-4 flex items-center gap-2 rounded-xl px-4 tap-feedback"
-                style={{
-                  height: 44,
-                  background: "var(--color-primary)",
-                  color: "white",
-                  fontWeight: 700,
-                  fontSize: "var(--text-sm)",
-                }}
+          <>
+            {/* Mobile empty */}
+            <div className="lg:hidden card text-center py-12">
+              <Users
+                size={40}
+                strokeWidth={1.2}
+                className="mx-auto mb-3 opacity-30"
+                color="var(--color-text-muted)"
+              />
+              <p style={{ fontSize: "var(--text-base)", fontWeight: 600, color: "var(--color-text)" }}>
+                {search ? "Aucun client trouvé" : "Aucun client encore"}
+              </p>
+              <p
+                style={{ fontSize: "var(--text-sm)", color: "var(--color-text-muted)", marginTop: 4 }}
               >
-                <Plus size={16} />
-                Ajouter un client
-              </button>
-            )}
-          </div>
-        ) : (
-          <div className="space-y-2">
-            {customers.map((customer) => {
-              const hasCredit = Number(customer.creditBalance) > 0;
-              return (
+                {search ? "Vérifiez l'orthographe" : "Ajoutez votre premier client"}
+              </p>
+              {!search && (
                 <button
-                  key={customer.id}
-                  onClick={() => router.push(`/clients/${customer.id}`)}
-                  className="card w-full flex items-center gap-3 text-left tap-feedback"
-                  style={{ padding: "0.75rem" }}
+                  onClick={() => setShowNewSheet(true)}
+                  className="mx-auto mt-4 flex items-center gap-2 rounded-xl px-4 tap-feedback"
+                  style={{
+                    height: 44,
+                    background: "var(--color-primary)",
+                    color: "white",
+                    fontWeight: 700,
+                    fontSize: "var(--text-sm)",
+                  }}
                 >
-                  <div
-                    className="flex items-center justify-center rounded-xl shrink-0 font-bold"
-                    style={{
-                      width: 42,
-                      height: 42,
-                      background: hasCredit
-                        ? "rgba(183,28,28,0.1)"
-                        : "var(--color-primary-10)",
-                      color: hasCredit ? "var(--color-danger)" : "var(--color-primary)",
-                      fontSize: "var(--text-base)",
-                    }}
+                  <Plus size={16} />
+                  Ajouter un client
+                </button>
+              )}
+            </div>
+            {/* Desktop empty */}
+            <div className="hidden lg:block">
+              <div className="card p-0 overflow-hidden">
+                <table className="w-full" style={{ borderCollapse: "collapse" }}>
+                  <thead>
+                    <tr style={{ borderBottom: "1.5px solid var(--color-border)", background: "var(--color-surface-2)" }}>
+                      {["Client", "Téléphone", "Crédit en cours", "Total acheté"].map((col) => (
+                        <th key={col} style={{ padding: "0.75rem 1rem", textAlign: "left", fontSize: "var(--text-xs)", fontWeight: 700, color: "var(--color-text-muted)", textTransform: "uppercase", letterSpacing: "0.05em" }}>{col}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td colSpan={4} style={{ padding: "3rem 1rem", textAlign: "center", color: "var(--color-text-muted)", fontSize: "var(--text-sm)" }}>
+                        {search ? "Aucun client trouvé" : "Aucun client encore"}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </>
+        ) : (
+          <>
+            {/* Mobile cards */}
+            <div className="lg:hidden space-y-2">
+              {customers.map((customer) => {
+                const hasCredit = Number(customer.creditBalance) > 0;
+                return (
+                  <button
+                    key={customer.id}
+                    onClick={() => router.push(`/clients/${customer.id}`)}
+                    className="card w-full flex items-center gap-3 text-left tap-feedback"
+                    style={{ padding: "0.75rem" }}
                   >
-                    {customer.name.charAt(0).toUpperCase()}
-                  </div>
-
-                  <div className="flex-1 min-w-0">
-                    <p
+                    <div
+                      className="flex items-center justify-center rounded-xl shrink-0 font-bold"
                       style={{
-                        fontSize: "var(--text-sm)",
-                        fontWeight: 700,
-                        color: "var(--color-text)",
+                        width: 42,
+                        height: 42,
+                        background: hasCredit
+                          ? "rgba(183,28,28,0.1)"
+                          : "var(--color-primary-10)",
+                        color: hasCredit ? "var(--color-danger)" : "var(--color-primary)",
+                        fontSize: "var(--text-base)",
                       }}
-                      className="truncate"
                     >
-                      {customer.name}
-                    </p>
-                    <div className="flex items-center gap-2 mt-0.5">
-                      {customer.phone && (
-                        <div
-                          className="flex items-center gap-1"
-                          style={{ color: "var(--color-text-muted)" }}
-                        >
-                          <Phone size={11} />
-                          <span style={{ fontSize: "var(--text-xs)" }}>{customer.phone}</span>
-                        </div>
-                      )}
-                      {customer.type === "business" && (
-                        <span
-                          className="rounded-md px-1.5 py-0.5"
-                          style={{
-                            fontSize: 10,
-                            fontWeight: 700,
-                            background: "var(--color-primary-10)",
-                            color: "var(--color-primary)",
-                          }}
-                        >
-                          Pro
-                        </span>
+                      {customer.name.charAt(0).toUpperCase()}
+                    </div>
+
+                    <div className="flex-1 min-w-0">
+                      <p
+                        style={{
+                          fontSize: "var(--text-sm)",
+                          fontWeight: 700,
+                          color: "var(--color-text)",
+                        }}
+                        className="truncate"
+                      >
+                        {customer.name}
+                      </p>
+                      <div className="flex items-center gap-2 mt-0.5">
+                        {customer.phone && (
+                          <div
+                            className="flex items-center gap-1"
+                            style={{ color: "var(--color-text-muted)" }}
+                          >
+                            <Phone size={11} />
+                            <span style={{ fontSize: "var(--text-xs)" }}>{customer.phone}</span>
+                          </div>
+                        )}
+                        {customer.type === "business" && (
+                          <span
+                            className="rounded-md px-1.5 py-0.5"
+                            style={{
+                              fontSize: 10,
+                              fontWeight: 700,
+                              background: "var(--color-primary-10)",
+                              color: "var(--color-primary)",
+                            }}
+                          >
+                            Pro
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="text-right shrink-0">
+                      {hasCredit ? (
+                        <>
+                          <p
+                            className="amount"
+                            style={{
+                              fontSize: "var(--text-sm)",
+                              fontWeight: 700,
+                              color: "var(--color-danger)",
+                            }}
+                          >
+                            -{formatFCFA(Number(customer.creditBalance))}
+                          </p>
+                          <p
+                            style={{
+                              fontSize: 10,
+                              color: "var(--color-danger)",
+                              opacity: 0.7,
+                              fontWeight: 500,
+                            }}
+                          >
+                            crédit dû
+                          </p>
+                        </>
+                      ) : (
+                        <ChevronRight size={16} color="var(--color-text-light)" />
                       )}
                     </div>
-                  </div>
+                  </button>
+                );
+              })}
+            </div>
 
-                  <div className="text-right shrink-0">
-                    {hasCredit ? (
-                      <>
-                        <p
-                          className="amount"
-                          style={{
-                            fontSize: "var(--text-sm)",
-                            fontWeight: 700,
-                            color: "var(--color-danger)",
-                          }}
+            {/* Desktop table */}
+            <div className="hidden lg:block">
+              <div className="card p-0 overflow-hidden">
+                <table className="w-full" style={{ borderCollapse: "collapse" }}>
+                  <thead>
+                    <tr style={{ borderBottom: "1.5px solid var(--color-border)", background: "var(--color-surface-2)" }}>
+                      {["Client", "Téléphone", "Crédit en cours", "Total acheté"].map((col) => (
+                        <th key={col} style={{ padding: "0.75rem 1rem", textAlign: "left", fontSize: "var(--text-xs)", fontWeight: 700, color: "var(--color-text-muted)", textTransform: "uppercase", letterSpacing: "0.05em" }}>{col}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {customers.map((customer) => {
+                      const hasCredit = Number(customer.creditBalance) > 0;
+                      return (
+                        <tr
+                          key={customer.id}
+                          onClick={() => router.push(`/clients/${customer.id}`)}
+                          className="tap-feedback"
+                          style={{ borderBottom: "1px solid var(--color-border)", cursor: "pointer" }}
+                          onMouseEnter={(e) => (e.currentTarget.style.background = "var(--color-surface-2)")}
+                          onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
                         >
-                          -{formatFCFA(Number(customer.creditBalance))}
-                        </p>
-                        <p
-                          style={{
-                            fontSize: 10,
-                            color: "var(--color-danger)",
-                            opacity: 0.7,
-                            fontWeight: 500,
-                          }}
-                        >
-                          crédit dû
-                        </p>
-                      </>
-                    ) : (
-                      <ChevronRight size={16} color="var(--color-text-light)" />
-                    )}
-                  </div>
-                </button>
-              );
-            })}
-          </div>
+                          {/* Client */}
+                          <td style={{ padding: "0.875rem 1rem", fontSize: "var(--text-sm)", maxWidth: 260 }}>
+                            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                              <span style={{ fontWeight: 700, color: "var(--color-text)" }} className="truncate">{customer.name}</span>
+                              {customer.type === "individual" ? (
+                                <span style={{ fontSize: 10, fontWeight: 600, color: "var(--color-text-muted)", whiteSpace: "nowrap" }}>Particulier</span>
+                              ) : (
+                                <span
+                                  style={{
+                                    fontSize: 10,
+                                    fontWeight: 700,
+                                    background: "var(--color-primary-10)",
+                                    color: "var(--color-primary)",
+                                    borderRadius: 4,
+                                    padding: "1px 6px",
+                                    whiteSpace: "nowrap",
+                                  }}
+                                >
+                                  Professionnel
+                                </span>
+                              )}
+                            </div>
+                          </td>
+                          {/* Téléphone */}
+                          <td style={{ padding: "0.875rem 1rem", fontSize: "var(--text-sm)", color: "var(--color-text-muted)", whiteSpace: "nowrap" }}>
+                            {customer.phone ?? <span style={{ color: "var(--color-text-muted)" }}>—</span>}
+                          </td>
+                          {/* Crédit en cours */}
+                          <td style={{ padding: "0.875rem 1rem", whiteSpace: "nowrap" }}>
+                            {hasCredit ? (
+                              <span className="amount" style={{ fontWeight: 700, fontSize: "var(--text-sm)", color: "var(--color-danger)" }}>
+                                {formatFCFA(Number(customer.creditBalance))}
+                              </span>
+                            ) : (
+                              <span style={{ color: "var(--color-text-muted)", fontSize: "var(--text-sm)" }}>—</span>
+                            )}
+                          </td>
+                          {/* Total acheté */}
+                          <td style={{ padding: "0.875rem 1rem", whiteSpace: "nowrap" }}>
+                            <span className="amount" style={{ fontWeight: 700, fontSize: "var(--text-sm)" }}>
+                              {formatFCFA(Number(customer.totalBought))}
+                            </span>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </>
         )}
       </div>
 

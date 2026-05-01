@@ -271,162 +271,302 @@ export default function SalesPage() {
 
         {/* Liste */}
         {loading ? (
-          <div className="space-y-2">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="skeleton rounded-2xl" style={{ height: 72 }} />
-            ))}
-          </div>
+          <>
+            {/* Mobile skeleton */}
+            <div className="lg:hidden space-y-2">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <div key={i} className="skeleton rounded-2xl" style={{ height: 72 }} />
+              ))}
+            </div>
+            {/* Desktop skeleton */}
+            <div className="hidden lg:block">
+              <div className="card p-0 overflow-hidden">
+                <table className="w-full" style={{ borderCollapse: "collapse" }}>
+                  <thead>
+                    <tr style={{ borderBottom: "1.5px solid var(--color-border)", background: "var(--color-surface-2)" }}>
+                      {["Date & heure", "Articles", "Client", "Montant", "Paiement"].map((col) => (
+                        <th key={col} style={{ padding: "0.75rem 1rem", textAlign: "left", fontSize: "var(--text-xs)", fontWeight: 700, color: "var(--color-text-muted)", textTransform: "uppercase", letterSpacing: "0.05em" }}>{col}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[1, 2, 3, 4, 5].map((i) => (
+                      <tr key={i} style={{ borderBottom: "1px solid var(--color-border)" }}>
+                        <td colSpan={5} style={{ padding: "0.75rem 1rem" }}>
+                          <div className="skeleton h-10 rounded" />
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </>
         ) : sales.length === 0 ? (
-          <div className="card text-center py-12">
-            <ShoppingCart
-              size={40}
-              strokeWidth={1.2}
-              className="mx-auto mb-3 opacity-30"
-              color="var(--color-text-muted)"
-            />
-            <p style={{ fontSize: "var(--text-base)", fontWeight: 600, color: "var(--color-text)" }}>
-              Aucune vente
-            </p>
-            <p style={{ fontSize: "var(--text-sm)", color: "var(--color-text-muted)", marginTop: 4 }}>
-              {pmFilter
-                ? "Essayez un autre mode de paiement"
-                : "Aucune vente pour cette période"}
-            </p>
-          </div>
+          <>
+            {/* Mobile empty */}
+            <div className="lg:hidden card text-center py-12">
+              <ShoppingCart
+                size={40}
+                strokeWidth={1.2}
+                className="mx-auto mb-3 opacity-30"
+                color="var(--color-text-muted)"
+              />
+              <p style={{ fontSize: "var(--text-base)", fontWeight: 600, color: "var(--color-text)" }}>
+                Aucune vente
+              </p>
+              <p style={{ fontSize: "var(--text-sm)", color: "var(--color-text-muted)", marginTop: 4 }}>
+                {pmFilter
+                  ? "Essayez un autre mode de paiement"
+                  : "Aucune vente pour cette période"}
+              </p>
+            </div>
+            {/* Desktop empty */}
+            <div className="hidden lg:block">
+              <div className="card p-0 overflow-hidden">
+                <table className="w-full" style={{ borderCollapse: "collapse" }}>
+                  <thead>
+                    <tr style={{ borderBottom: "1.5px solid var(--color-border)", background: "var(--color-surface-2)" }}>
+                      {["Date & heure", "Articles", "Client", "Montant", "Paiement"].map((col) => (
+                        <th key={col} style={{ padding: "0.75rem 1rem", textAlign: "left", fontSize: "var(--text-xs)", fontWeight: 700, color: "var(--color-text-muted)", textTransform: "uppercase", letterSpacing: "0.05em" }}>{col}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td colSpan={5} style={{ padding: "3rem 1rem", textAlign: "center", color: "var(--color-text-muted)", fontSize: "var(--text-sm)" }}>
+                        Aucune vente pour cette période
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </>
         ) : (
-          <div className="space-y-4">
-            {Object.entries(grouped).map(([date, daySales]) => {
-              const dayTotal = daySales.reduce((s, i) => s + Number(i.netAmount), 0);
-              return (
-                <section key={date}>
-                  <div className="flex items-center justify-between mb-2">
-                    <p
-                      style={{
-                        fontSize: "var(--text-xs)",
-                        fontWeight: 700,
-                        color: "var(--color-text-muted)",
-                        textTransform: "uppercase",
-                        letterSpacing: "0.06em",
-                      }}
-                    >
-                      {date}
-                    </p>
-                    <p
-                      className="amount"
-                      style={{
-                        fontSize: "var(--text-xs)",
-                        fontWeight: 700,
-                        color: "var(--color-primary)",
-                      }}
-                    >
-                      {formatFCFA(dayTotal)}
-                    </p>
-                  </div>
-                  <div className="space-y-2">
-                    {daySales.map((sale) => (
-                      <button
-                        key={sale.id}
-                        onClick={() => router.push(`/sales/${sale.id}`)}
-                        className="card w-full flex items-center gap-3 text-left tap-feedback"
-                        style={{ padding: "0.75rem" }}
+          <>
+            {/* Mobile list grouped by date */}
+            <div className="lg:hidden space-y-4">
+              {Object.entries(grouped).map(([date, daySales]) => {
+                const dayTotal = daySales.reduce((s, i) => s + Number(i.netAmount), 0);
+                return (
+                  <section key={date}>
+                    <div className="flex items-center justify-between mb-2">
+                      <p
+                        style={{
+                          fontSize: "var(--text-xs)",
+                          fontWeight: 700,
+                          color: "var(--color-text-muted)",
+                          textTransform: "uppercase",
+                          letterSpacing: "0.06em",
+                        }}
                       >
-                        <div
-                          className="flex items-center justify-center rounded-xl shrink-0"
-                          style={{
-                            width: 42,
-                            height: 42,
-                            background: `${PM_COLORS[sale.paymentMethod]}12`,
-                          }}
+                        {date}
+                      </p>
+                      <p
+                        className="amount"
+                        style={{
+                          fontSize: "var(--text-xs)",
+                          fontWeight: 700,
+                          color: "var(--color-primary)",
+                        }}
+                      >
+                        {formatFCFA(dayTotal)}
+                      </p>
+                    </div>
+                    <div className="space-y-2">
+                      {daySales.map((sale) => (
+                        <button
+                          key={sale.id}
+                          onClick={() => router.push(`/sales/${sale.id}`)}
+                          className="card w-full flex items-center gap-3 text-left tap-feedback"
+                          style={{ padding: "0.75rem" }}
                         >
-                          <ShoppingCart size={18} color={PM_COLORS[sale.paymentMethod]} strokeWidth={2} />
-                        </div>
-
-                        <div className="flex-1 min-w-0">
-                          <p
-                            className="truncate"
+                          <div
+                            className="flex items-center justify-center rounded-xl shrink-0"
                             style={{
-                              fontSize: "var(--text-sm)",
-                              fontWeight: 600,
-                              color: "var(--color-text)",
+                              width: 42,
+                              height: 42,
+                              background: `${PM_COLORS[sale.paymentMethod]}12`,
                             }}
                           >
-                            {sale.customer?.name ??
-                              (sale.items?.[0]?.product?.name
-                                ? sale.items[0].product.name +
-                                  (sale.items.length > 1 ? ` +${sale.items.length - 1}` : "")
-                                : sale.reference)}
-                          </p>
-                          <div className="flex items-center gap-2 mt-0.5">
-                            <span
-                              className="rounded-lg px-1.5 py-0.5"
+                            <ShoppingCart size={18} color={PM_COLORS[sale.paymentMethod]} strokeWidth={2} />
+                          </div>
+
+                          <div className="flex-1 min-w-0">
+                            <p
+                              className="truncate"
                               style={{
-                                fontSize: 10,
-                                fontWeight: 700,
-                                background: `${PM_COLORS[sale.paymentMethod]}15`,
-                                color: PM_COLORS[sale.paymentMethod],
+                                fontSize: "var(--text-sm)",
+                                fontWeight: 600,
+                                color: "var(--color-text)",
                               }}
                             >
-                              {PM_LABELS[sale.paymentMethod]}
-                            </span>
-                            {sale.creditAmount > 0 && (
+                              {sale.customer?.name ??
+                                (sale.items?.[0]?.product?.name
+                                  ? sale.items[0].product.name +
+                                    (sale.items.length > 1 ? ` +${sale.items.length - 1}` : "")
+                                  : sale.reference)}
+                            </p>
+                            <div className="flex items-center gap-2 mt-0.5">
                               <span
                                 className="rounded-lg px-1.5 py-0.5"
                                 style={{
                                   fontSize: 10,
                                   fontWeight: 700,
-                                  background: "rgba(183,28,28,0.1)",
-                                  color: "#B71C1C",
+                                  background: `${PM_COLORS[sale.paymentMethod]}15`,
+                                  color: PM_COLORS[sale.paymentMethod],
                                 }}
                               >
-                                Crédit {formatFCFA(Number(sale.creditAmount))}
+                                {PM_LABELS[sale.paymentMethod]}
                               </span>
-                            )}
-                            <span
-                              style={{ fontSize: "var(--text-xs)", color: "var(--color-text-light)" }}
-                            >
-                              {formatTime(sale.createdAt)}
-                            </span>
+                              {sale.creditAmount > 0 && (
+                                <span
+                                  className="rounded-lg px-1.5 py-0.5"
+                                  style={{
+                                    fontSize: 10,
+                                    fontWeight: 700,
+                                    background: "rgba(183,28,28,0.1)",
+                                    color: "#B71C1C",
+                                  }}
+                                >
+                                  Crédit {formatFCFA(Number(sale.creditAmount))}
+                                </span>
+                              )}
+                              <span
+                                style={{ fontSize: "var(--text-xs)", color: "var(--color-text-light)" }}
+                              >
+                                {formatTime(sale.createdAt)}
+                              </span>
+                            </div>
                           </div>
-                        </div>
 
-                        <div className="flex items-center gap-1 shrink-0">
-                          <p
-                            className="amount"
+                          <div className="flex items-center gap-1 shrink-0">
+                            <p
+                              className="amount"
+                              style={{
+                                fontSize: "var(--text-base)",
+                                fontWeight: 700,
+                                color: "var(--color-text)",
+                              }}
+                            >
+                              {formatFCFA(Number(sale.netAmount))}
+                            </p>
+                            <ChevronRight size={14} color="var(--color-text-light)" />
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  </section>
+                );
+              })}
+
+              {/* Load more */}
+              {page < totalPages && (
+                <button
+                  onClick={loadMore}
+                  disabled={loadingMore}
+                  className="w-full rounded-2xl py-3 tap-feedback"
+                  style={{
+                    background: "var(--color-surface)",
+                    border: "1px solid var(--color-border)",
+                    color: "var(--color-primary)",
+                    fontWeight: 600,
+                    fontSize: "var(--text-sm)",
+                  }}
+                >
+                  {loadingMore ? "Chargement…" : `Voir plus (${totalCount - sales.length} restantes)`}
+                </button>
+              )}
+            </div>
+
+            {/* Desktop flat table */}
+            <div className="hidden lg:block">
+              <div className="card p-0 overflow-hidden">
+                <table className="w-full" style={{ borderCollapse: "collapse" }}>
+                  <thead>
+                    <tr style={{ borderBottom: "1.5px solid var(--color-border)", background: "var(--color-surface-2)" }}>
+                      {["Date & heure", "Articles", "Client", "Montant", "Paiement"].map((col) => (
+                        <th key={col} style={{ padding: "0.75rem 1rem", textAlign: "left", fontSize: "var(--text-xs)", fontWeight: 700, color: "var(--color-text-muted)", textTransform: "uppercase", letterSpacing: "0.05em" }}>{col}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {sales.map((sale) => (
+                      <tr
+                        key={sale.id}
+                        onClick={() => router.push(`/sales/${sale.id}`)}
+                        className="tap-feedback"
+                        style={{ borderBottom: "1px solid var(--color-border)", cursor: "pointer" }}
+                        onMouseEnter={(e) => (e.currentTarget.style.background = "var(--color-surface-2)")}
+                        onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+                      >
+                        {/* Date & heure */}
+                        <td style={{ padding: "0.875rem 1rem", fontSize: "var(--text-sm)", whiteSpace: "nowrap" }}>
+                          <span style={{ fontWeight: 600, color: "var(--color-text)" }}>{formatDate(sale.createdAt)}</span>
+                          <span style={{ marginLeft: "0.375rem", color: "var(--color-text-muted)" }}>{formatTime(sale.createdAt)}</span>
+                        </td>
+                        {/* Articles */}
+                        <td style={{ padding: "0.875rem 1rem", fontSize: "var(--text-sm)", maxWidth: 240 }}>
+                          <p style={{ fontWeight: 600, color: "var(--color-text)" }} className="truncate">
+                            {sale.items?.[0]?.product?.name ?? sale.reference}
+                            {sale.items?.length > 1 && (
+                              <span style={{ color: "var(--color-text-muted)", fontWeight: 400 }}> +{sale.items.length - 1}</span>
+                            )}
+                          </p>
+                          <p style={{ fontSize: "var(--text-xs)", color: "var(--color-text-muted)" }} className="truncate">
+                            {sale.reference}
+                          </p>
+                        </td>
+                        {/* Client */}
+                        <td style={{ padding: "0.875rem 1rem", fontSize: "var(--text-sm)", color: "var(--color-text)" }}>
+                          {sale.customer?.name ?? <span style={{ color: "var(--color-text-muted)" }}>—</span>}
+                        </td>
+                        {/* Montant */}
+                        <td style={{ padding: "0.875rem 1rem", whiteSpace: "nowrap" }}>
+                          <span className="amount" style={{ fontWeight: 700, fontSize: "var(--text-sm)" }}>
+                            {formatFCFA(Number(sale.netAmount))}
+                          </span>
+                        </td>
+                        {/* Paiement */}
+                        <td style={{ padding: "0.875rem 1rem" }}>
+                          <span
+                            className="rounded-lg px-2 py-1"
                             style={{
-                              fontSize: "var(--text-base)",
+                              fontSize: "var(--text-xs)",
                               fontWeight: 700,
-                              color: "var(--color-text)",
+                              background: `${PM_COLORS[sale.paymentMethod]}15`,
+                              color: PM_COLORS[sale.paymentMethod],
+                              whiteSpace: "nowrap",
                             }}
                           >
-                            {formatFCFA(Number(sale.netAmount))}
-                          </p>
-                          <ChevronRight size={14} color="var(--color-text-light)" />
-                        </div>
-                      </button>
+                            {PM_LABELS[sale.paymentMethod]}
+                          </span>
+                        </td>
+                      </tr>
                     ))}
-                  </div>
-                </section>
-              );
-            })}
-
-            {/* Load more */}
-            {page < totalPages && (
-              <button
-                onClick={loadMore}
-                disabled={loadingMore}
-                className="w-full rounded-2xl py-3 tap-feedback"
-                style={{
-                  background: "var(--color-surface)",
-                  border: "1px solid var(--color-border)",
-                  color: "var(--color-primary)",
-                  fontWeight: 600,
-                  fontSize: "var(--text-sm)",
-                }}
-              >
-                {loadingMore ? "Chargement…" : `Voir plus (${totalCount - sales.length} restantes)`}
-              </button>
-            )}
-          </div>
+                  </tbody>
+                </table>
+              </div>
+              {/* Load more (desktop) */}
+              {page < totalPages && (
+                <button
+                  onClick={loadMore}
+                  disabled={loadingMore}
+                  className="w-full rounded-2xl py-3 mt-3 tap-feedback"
+                  style={{
+                    background: "var(--color-surface)",
+                    border: "1px solid var(--color-border)",
+                    color: "var(--color-primary)",
+                    fontWeight: 600,
+                    fontSize: "var(--text-sm)",
+                  }}
+                >
+                  {loadingMore ? "Chargement…" : `Voir plus (${totalCount - sales.length} restantes)`}
+                </button>
+              )}
+            </div>
+          </>
         )}
       </div>
 
