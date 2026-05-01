@@ -4,7 +4,7 @@ import { useParams, useRouter } from "next/navigation";
 import {
   Phone, MessageCircle, ShoppingCart, CreditCard,
   Calendar, CheckCircle2, Clock, ChevronRight, Plus,
-  Trash2, TrendingUp, X,
+  Trash2, TrendingUp, X, FileText,
 } from "lucide-react";
 import PageHeader from "@/components/ui/PageHeader";
 import api, { formatFCFA, formatDate, formatTime } from "@/lib/api";
@@ -163,13 +163,25 @@ export default function ClientDetailPage() {
         subtitle={customer.type === "business" ? "Client professionnel" : "Particulier"}
         back
         action={
-          <button
-            onClick={() => setShowDeleteConfirm(true)}
-            className="flex items-center justify-center rounded-xl tap-feedback"
-            style={{ width: 36, height: 36, background: "rgba(183,28,28,0.08)" }}
-          >
-            <Trash2 size={16} color="var(--color-danger)" />
-          </button>
+          <div className="flex items-center gap-2">
+            {totalCredit > 0 && (
+              <button
+                onClick={() => router.push(`/clients/${customer.id}/releve`)}
+                className="flex items-center justify-center rounded-xl tap-feedback"
+                style={{ width: 36, height: 36, background: "rgba(183,28,28,0.08)" }}
+                title="Relevé de crédit"
+              >
+                <FileText size={16} color="var(--color-danger)" />
+              </button>
+            )}
+            <button
+              onClick={() => setShowDeleteConfirm(true)}
+              className="flex items-center justify-center rounded-xl tap-feedback"
+              style={{ width: 36, height: 36, background: "rgba(183,28,28,0.08)" }}
+            >
+              <Trash2 size={16} color="var(--color-danger)" />
+            </button>
+          </div>
         }
       />
 

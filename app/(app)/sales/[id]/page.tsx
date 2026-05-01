@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import {
   User, Phone, Calendar, Hash, CreditCard,
-  Package, CheckCircle2, Clock,
+  Package, CheckCircle2, Clock, Printer,
 } from "lucide-react";
 import PageHeader from "@/components/ui/PageHeader";
 import api, { formatFCFA, formatDate, formatTime } from "@/lib/api";
@@ -107,7 +107,21 @@ export default function SaleDetailPage() {
 
   return (
     <div>
-      <PageHeader title={sale.reference} subtitle={formatDate(sale.createdAt)} back />
+      <PageHeader
+        title={sale.reference}
+        subtitle={formatDate(sale.createdAt)}
+        back
+        action={
+          <button
+            onClick={() => router.push(`/sales/${sale.id}/print`)}
+            className="flex items-center justify-center rounded-xl tap-feedback"
+            style={{ width: 36, height: 36, background: "var(--color-primary-50)" }}
+            title="Imprimer le ticket"
+          >
+            <Printer size={17} color="var(--color-primary)" />
+          </button>
+        }
+      />
 
       <div className="page-content space-y-4">
         {/* Badge paiement */}

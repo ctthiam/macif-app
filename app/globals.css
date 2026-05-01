@@ -295,6 +295,13 @@ input, textarea, select, button {
   }
 }
 
+/* ── Print styles ── */
+@media print {
+  .no-print { display: none !important; }
+  body { background: white !important; }
+  @page { margin: 1cm; }
+}
+
 @keyframes shimmer {
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
