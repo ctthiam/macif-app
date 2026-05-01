@@ -320,7 +320,7 @@ export default function ClientsPage() {
             className="rounded-t-3xl"
             style={{
               background: "var(--color-surface)",
-              padding: "1.25rem 1rem 2rem",
+              padding: "1.25rem 1rem calc(2rem + env(safe-area-inset-bottom))",
               maxHeight: "85vh",
               overflowY: "auto",
             }}

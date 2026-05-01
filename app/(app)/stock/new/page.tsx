@@ -10,7 +10,10 @@ import api from "@/lib/api";
 
 const schema = z.object({
   name: z.string().min(1, "Nom requis"),
-  categoryId: z.string().optional(),
+  categoryId: z.preprocess(
+    (v) => (v === "" || v == null ? undefined : Number(v)),
+    z.number().optional()
+  ),
   unit: z.string().optional(),
   buyPrice: z.number().min(0).optional(),
   sellPrice: z.number().positive("Prix de vente requis"),
@@ -29,10 +32,11 @@ export default function NewProductPage() {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  const { register, handleSubmit, formState: { errors }, reset } = useForm<FormData>({
+  const { register, handleSubmit, watch, formState: { errors }, reset } = useForm<FormData>({
     resolver: zodResolver(schema) as any,
     defaultValues: { unit: "pièce", stockQty: 0, stockAlert: 5 },
   });
+  const selectedUnit = watch("unit");
 
   useEffect(() => {
     api.get("/api/categories").then((r) => setCategories(r.data.data ?? []));
@@ -124,10 +128,10 @@ export default function NewProductPage() {
                       padding: "0.375rem 0.875rem",
                       borderRadius: "var(--radius-full)",
                       fontSize: "var(--text-sm)",
-                      fontWeight: 500,
-                      border: "1.5px solid var(--color-border)",
-                      background: "var(--color-surface)",
-                      color: "var(--color-text-muted)",
+                      fontWeight: u === selectedUnit ? 600 : 500,
+                      border: `1.5px solid ${u === selectedUnit ? "var(--color-primary)" : "var(--color-border)"}`,
+                      background: u === selectedUnit ? "var(--color-primary-50)" : "var(--color-surface)",
+                      color: u === selectedUnit ? "var(--color-primary)" : "var(--color-text-muted)",
                     }}
                   >
                     {u}

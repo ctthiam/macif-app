@@ -208,7 +208,7 @@ export default function SuppliersPage() {
           style={{ background: "rgba(0,0,0,0.5)" }}
           onClick={(e) => e.target === e.currentTarget && setShowSheet(false)}
         >
-          <div className="rounded-t-3xl" style={{ background: "var(--color-surface)", padding: "1.25rem 1rem 2rem" }}>
+          <div className="rounded-t-3xl" style={{ background: "var(--color-surface)", padding: "1.25rem 1rem calc(2rem + env(safe-area-inset-bottom))" }}>
             <div className="mx-auto mb-4 rounded-full" style={{ width: 40, height: 4, background: "var(--color-border)" }} />
             <div className="flex items-center justify-between mb-5">
               <h2 style={{ fontSize: "var(--text-lg)", fontWeight: 700, color: "var(--color-text)" }}>

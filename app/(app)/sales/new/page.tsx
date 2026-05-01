@@ -240,8 +240,8 @@ export default function NewSalePage() {
               onClick={() => setSelectedProduct(null)}
             >
               <div
-                className="w-full rounded-t-3xl p-6 space-y-4"
-                style={{ background: "var(--color-surface)", maxWidth: 480, margin: "0 auto" }}
+                className="w-full rounded-t-3xl space-y-4"
+                style={{ background: "var(--color-surface)", maxWidth: 480, margin: "0 auto", padding: "1.5rem 1.5rem calc(1.5rem + env(safe-area-inset-bottom))" }}
                 onClick={(e) => e.stopPropagation()}
               >
                 <div className="flex items-center gap-3">
@@ -524,6 +524,7 @@ export default function NewSalePage() {
           left: "50%",
           transform: "translateX(-50%)",
           width: "100%",
+          paddingBottom: "calc(0.75rem + env(safe-area-inset-bottom))",
         }}
       >
         {step === "cart" ? (
