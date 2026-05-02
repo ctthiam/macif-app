@@ -36,9 +36,9 @@ function NavItem({ href, icon: Icon, label }: { href: string; icon: React.Elemen
       href={href}
       className="flex items-center gap-3 rounded-xl px-3 py-2.5 transition-colors"
       style={{
-        background: active ? "var(--color-primary-50)" : "transparent",
-        color: active ? "var(--color-primary)" : "var(--color-text-muted)",
-        fontWeight: active ? 700 : 500,
+        background: active ? "rgba(255,255,255,0.15)" : "transparent",
+        color: active ? "white" : "rgba(255,255,255,0.6)",
+        fontWeight: active ? 700 : 400,
         fontSize: "var(--text-sm)",
         textDecoration: "none",
       }}
@@ -50,16 +50,16 @@ function NavItem({ href, icon: Icon, label }: { href: string; icon: React.Elemen
 }
 
 const Separator = () => (
-  <div style={{ height: 1, background: "var(--color-border)", margin: "0.5rem 0.75rem" }} />
+  <div style={{ height: 1, background: "rgba(255,255,255,0.1)", margin: "0.5rem 0.75rem" }} />
 );
 
 const SectionLabel = ({ label }: { label: string }) => (
   <p style={{
     fontSize: 10,
     fontWeight: 700,
-    color: "var(--color-text-light)",
+    color: "rgba(255,255,255,0.35)",
     textTransform: "uppercase",
-    letterSpacing: "0.06em",
+    letterSpacing: "0.08em",
     padding: "0.25rem 0.75rem",
     marginBottom: "0.125rem",
   }}>
@@ -86,8 +86,7 @@ export default function DesktopSidebar() {
         top: 0,
         bottom: 0,
         width: 240,
-        background: "var(--color-surface)",
-        borderRight: "1px solid var(--color-border)",
+        background: "var(--color-primary-dark)",
         zIndex: 20,
         overflowY: "auto",
       }}
@@ -97,15 +96,15 @@ export default function DesktopSidebar() {
         <div className="flex items-center gap-2.5">
           <div
             className="flex items-center justify-center rounded-xl shrink-0"
-            style={{ width: 36, height: 36, background: "var(--color-primary)" }}
+            style={{ width: 36, height: 36, background: "rgba(255,255,255,0.15)" }}
           >
             <ShoppingBag size={20} color="white" />
           </div>
           <div>
-            <p style={{ fontWeight: 800, fontSize: "var(--text-base)", color: "var(--color-primary)", lineHeight: 1 }}>
+            <p style={{ fontWeight: 800, fontSize: "var(--text-base)", color: "white", lineHeight: 1 }}>
               MACIF
             </p>
-            <p style={{ fontSize: 10, color: "var(--color-text-muted)", fontWeight: 500, marginTop: 3 }}>
+            <p style={{ fontSize: 10, color: "rgba(255,255,255,0.5)", fontWeight: 500, marginTop: 3 }}>
               Gestion de boutique
             </p>
           </div>
@@ -113,11 +112,11 @@ export default function DesktopSidebar() {
       </div>
 
       {/* Shop card */}
-      <div style={{ margin: "0 0.75rem 1rem", padding: "0.75rem 1rem", background: "var(--color-primary)", borderRadius: 12 }}>
+      <div style={{ margin: "0 0.75rem 1rem", padding: "0.75rem 1rem", background: "rgba(0,0,0,0.2)", borderRadius: 12 }}>
         <p style={{ fontSize: "var(--text-sm)", fontWeight: 700, color: "white", marginBottom: 2 }} className="truncate">
           {shop?.name ?? "Ma boutique"}
         </p>
-        <p style={{ fontSize: "var(--text-xs)", color: "rgba(255,255,255,0.75)" }} className="truncate">
+        <p style={{ fontSize: "var(--text-xs)", color: "rgba(255,255,255,0.55)" }} className="truncate">
           {user?.name ?? "Gérant"}
         </p>
       </div>
@@ -129,7 +128,7 @@ export default function DesktopSidebar() {
           className="w-full flex items-center justify-center gap-2 rounded-xl"
           style={{
             height: 40,
-            background: "var(--color-primary)",
+            background: "var(--color-accent)",
             color: "white",
             fontWeight: 700,
             fontSize: "var(--text-sm)",
@@ -156,12 +155,12 @@ export default function DesktopSidebar() {
       </nav>
 
       {/* Logout */}
-      <div style={{ padding: "0.75rem", borderTop: "1px solid var(--color-border)" }}>
+      <div style={{ padding: "0.75rem", borderTop: "1px solid rgba(255,255,255,0.1)" }}>
         <button
           onClick={handleLogout}
           className="w-full flex items-center gap-2 rounded-xl px-3 py-2.5"
           style={{
-            color: "var(--color-danger)",
+            color: "rgba(255,120,120,0.9)",
             fontWeight: 600,
             fontSize: "var(--text-sm)",
             background: "transparent",
